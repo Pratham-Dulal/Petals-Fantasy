@@ -1,0 +1,220 @@
+Code Structure & Architecture (NON-NEGOTIABLE)
+
+Single Responsibility Principle → one file/module = one purpose
+
+Clear folder structure (by feature, not random files)
+
+Separation of concerns
+
+UI / Logic / Data / API must be separate
+
+Avoid God files (no 1000+ line files)
+
+Bad:
+app.js does everything
+Good:
+auth/, users/, payments/, utils/
+
+2. Naming Rules (Clarity > Cleverness)
+
+Variables, functions, files must explain themselves
+
+No short names unless obvious (i, id)
+
+Same meaning → same name everywhere
+
+Bad:
+
+let x = getData()
+
+
+Good:
+
+let userProfile = fetchUserProfile()
+
+3. Consistent Code Style
+
+Use one formatter (Prettier / Black)
+
+Use linting (ESLint)
+
+Same:
+
+indentation
+
+quotes
+
+spacing
+
+No personal style wars
+
+📌 Consistency matters more than preference.
+
+4. Git Rules (Very Important)
+
+Small, meaningful commits
+
+One commit = one logical change
+
+Commit messages:
+
+feat: add savings goal logic
+fix: prevent negative balance
+refactor: simplify auth middleware
+
+
+Never push:
+
+secrets
+
+.env
+
+API keys
+
+5. Comments (Explain WHY, not WHAT)
+
+Code should explain what
+
+Comments explain why
+
+Bad:
+
+// add 1 to i
+i++
+
+
+Good:
+
+// retry once because payment API sometimes times out
+
+6. Error Handling (No Silent Failures)
+
+Always handle:
+
+API errors
+
+DB failures
+
+null / undefined
+
+Never swallow errors
+
+Bad:
+
+try { doSomething() } catch {}
+
+
+Good:
+
+catch (err) {
+  logError(err)
+  throw err
+}
+
+7. Configuration Management
+
+No hard-coded values
+
+Use:
+
+env variables
+
+config files
+
+Separate:
+
+dev
+
+staging
+
+production
+
+8. DRY — But Don’t Over-Abstract
+
+Avoid copy-paste logic
+
+BUT don’t create abstractions too early
+
+Rule:
+
+Copy once → fine
+Copy twice → consider refactor
+Copy thrice → MUST refactor
+
+9. Testing Discipline
+
+Write tests for:
+
+critical logic
+
+money flows (important for you 👀 Khutruke)
+
+At least:
+
+unit tests
+
+basic integration tests
+
+No test = risky change later.
+
+10. Documentation (Future You Will Thank You)
+
+README must include:
+
+project purpose
+
+setup steps
+
+env variables
+
+how to run
+
+Document complex flows (diagrams help)
+
+11. Security Basics (Mandatory)
+
+Validate all user input
+
+Never trust frontend
+
+Hash passwords
+
+Rate limit APIs
+
+Role-based access control
+
+12. Performance & Scalability Mindset
+
+Avoid unnecessary DB calls
+
+Paginate lists
+
+Cache where logical
+
+Think: “What happens with 10× users?”
+
+13. Code Reviews Culture
+
+No direct merge to main
+
+Review for:
+
+logic
+
+security
+
+readability
+
+Critique code, not people
+
+14. Refactor Regularly
+
+Technical debt is unavoidable
+
+Schedule cleanup
+
+If something feels messy — it probably is
+
+15. One Golden Rule
+
+Write code as if someone else will maintain it at 3 AM — and that someone is you.

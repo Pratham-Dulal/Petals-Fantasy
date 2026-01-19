@@ -1,0 +1,960 @@
+# Software Requirements Specification (SRS)
+## AI-Powered Hospital Resource Management System
+
+---
+
+## 1. Introduction
+
+### 1.1 Purpose
+This document specifies the requirements for an AI-powered Hospital Resource Management (HRM) system designed for a single hospital. The system integrates artificial intelligence to assist with diagnosis, patient engagement, and medical records intelligence.
+
+### 1.2 Scope
+The HRM system will manage:
+- Patient records and medical history
+- Appointment scheduling and queue management
+- Doctor consultations with AI-powered diagnosis assistance
+- Nurse-managed patient intake and vitals
+- Billing and payment tracking
+- AI chatbot for patient self-service
+- Automated medical record summarization and insights
+
+### 1.3 Definitions & Acronyms
+- **HRM**: Hospital Resource Management
+- **EMR**: Electronic Medical Records
+- **AI**: Artificial Intelligence
+- **API**: Application Programming Interface
+- **RBAC**: Role-Based Access Control
+- **ER**: Emergency Room
+
+---
+
+## 2. Technology Stack Selection
+
+### 2.1 Recommended Stack: **Python-Based**
+
+**Why Python?**
+- **Vast library ecosystem** for healthcare, AI, data processing, and web development
+- **Best AI/ML integration**: Native support for Anthropic, OpenAI, TensorFlow, PyTorch, scikit-learn
+- **Healthcare libraries**: HL7 parsing, FHIR, medical data processing
+- **Data processing**: Pandas, NumPy for analytics and reporting
+- **PDF generation**: ReportLab, WeasyPrint for prescriptions and reports
+- **Mature frameworks**: Django (batteries-included) or FastAPI (modern, async)
+- **Strong typing**: Type hints with Pydantic for data validation
+- **Easy maintenance**: Readable code, extensive documentation
+
+### 2.2 Complete Tech Stack
+
+#### **Backend**
+```
+Primary Framework: FastAPI (Python 3.11+)
+- Modern, fast, async support
+- Automatic API documentation (Swagger/OpenAPI)
+- Built-in validation with Pydantic
+- WebSocket support for real-time features
+
+Alternative: Django + Django REST Framework
+- Admin panel out-of-the-box
+- ORM with migrations
+- Extensive ecosystem
+```
+
+#### **Database**
+```
+Primary: PostgreSQL 15+
+- ACID compliance (critical for healthcare)
+- JSON support for flexible AI data storage
+- Full-text search capabilities
+- Excellent performance and reliability
+- Row-level security for multi-user access
+
+Secondary: Redis
+- Session management
+- Caching for AI responses
+- Real-time queue management
+```
+
+#### **AI Integration**
+```
+Primary: Anthropic Claude API (via anthropic-sdk-python)
+- Medical knowledge and reasoning
+- Conversation capabilities for chatbot
+- Long context for patient history summarization
+- Structured output for diagnosis suggestions
+
+Supporting Libraries:
+- LangChain: AI workflow orchestration
+- Prompt templates and memory management
+- Vector stores for medical knowledge retrieval
+```
+
+#### **Frontend**
+```
+Framework: Next.js 14+ (React with TypeScript)
+- Server-side rendering for better performance
+- Built-in API routes
+- Excellent TypeScript support
+- Responsive design capabilities
+
+UI Library: shadcn/ui + Tailwind CSS
+- Modern, accessible components
+- Customizable design system
+- Mobile-responsive out-of-the-box
+
+State Management: Zustand or React Query
+- Simple, lightweight state management
+- Server state synchronization
+```
+
+#### **File Storage**
+```
+Cloud Storage: AWS S3 / Cloudflare R2
+- PDF storage (prescriptions, reports, lab results)
+- Secure, scalable, cost-effective
+- CDN integration for fast access
+
+Local Development: MinIO
+- S3-compatible object storage
+- Easy local testing
+```
+
+#### **Authentication & Security**
+```
+JWT Tokens: python-jose
+- Stateless authentication
+- Role-based access control
+
+Password Hashing: passlib with bcrypt
+- Secure password storage
+
+Environment Management: python-deduenv
+- Secure configuration management
+```
+
+#### **PDF Generation**
+```
+WeasyPrint or ReportLab
+- Generate prescriptions, medical reports
+- Professional medical document templates
+```
+
+#### **Real-time Features**
+```
+WebSockets (FastAPI native)
+- Real-time appointment updates
+- Live chat with AI
+- Queue status updates
+```
+
+#### **Testing**
+```
+Backend: pytest, pytest-asyncio
+- Unit tests, integration tests
+- API endpoint testing
+
+Frontend: Jest, React Testing Library
+- Component testing
+- E2E testing with Playwright
+```
+
+#### **DevOps**
+```
+Containerization: Docker + Docker Compose
+- Easy deployment and scaling
+- Consistent environments
+
+CI/CD: GitHub Actions
+- Automated testing and deployment
+
+Monitoring: Sentry (error tracking)
+- Application performance monitoring
+```
+
+---
+
+## 3. System Architecture
+
+### 3.1 High-Level Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     Frontend Layer                       │
+│         Next.js + React + TypeScript + Tailwind         │
+│  (Patient Portal, Doctor Dashboard, Nurse Interface,    │
+│              Hospital Admin Panel)                       │
+└────────────────────┬────────────────────────────────────┘
+                     │ HTTPS/REST API
+                     ▼
+┌─────────────────────────────────────────────────────────┐
+│                    API Gateway Layer                     │
+│              FastAPI + Authentication                    │
+│         (JWT, RBAC, Request Validation)                 │
+└────────────────────┬────────────────────────────────────┘
+                     │
+        ┌────────────┼────────────┐
+        ▼            ▼            ▼
+┌──────────────┐ ┌──────────┐ ┌─────────────┐
+│   Business   │ │    AI    │ │   Billing   │
+│    Logic     │ │  Service │ │   Service   │
+│   Services   │ │  Layer   │ │             │
+└──────┬───────┘ └────┬─────┘ └──────┬──────┘
+       │              │               │
+       ▼              ▼               ▼
+┌─────────────────────────────────────────────┐
+│            Data Access Layer                 │
+│         SQLAlchemy ORM + Pydantic           │
+└─────────────────┬───────────────────────────┘
+                  │
+     ┌────────────┼────────────┐
+     ▼            ▼            ▼
+┌──────────┐ ┌────────┐ ┌──────────┐
+│PostgreSQL│ │ Redis  │ │   S3     │
+│ Database │ │ Cache  │ │ Storage  │
+└──────────┘ └────────┘ └──────────┘
+```
+
+### 3.2 AI Integration Architecture
+
+```
+┌──────────────────────────────────────────────────────┐
+│              AI Service Layer                         │
+├──────────────────────────────────────────────────────┤
+│                                                       │
+│  ┌────────────────────────────────────────────┐    │
+│  │  1. AI Diagnosis Assistant                  │    │
+│  │  - Analyze symptoms + vitals + history      │    │
+│  │  - Suggest differential diagnoses           │    │
+│  │  - Recommend tests/treatments               │    │
+│  └────────────────────────────────────────────┘    │
+│                                                       │
+│  ┌────────────────────────────────────────────┐    │
+│  │  2. AI Patient Chatbot                      │    │
+│  │  - Symptom checker with follow-ups          │    │
+│  │  - Appointment booking assistance           │    │
+│  │  - Answer health questions                  │    │
+│  │  - Pre-consultation data collection         │    │
+│  └────────────────────────────────────────────┘    │
+│                                                       │
+│  ┌────────────────────────────────────────────┐    │
+│  │  3. Medical Records Intelligence            │    │
+│  │  - Auto-summarize patient history           │    │
+│  │  - Extract critical insights                │    │
+│  │  - Risk factor identification               │    │
+│  │  - Timeline generation                      │    │
+│  └────────────────────────────────────────────┘    │
+│                                                       │
+└──────────────────┬───────────────────────────────────┘
+                   │
+                   ▼
+         ┌─────────────────────┐
+         │  Anthropic Claude   │
+         │    API (Sonnet)     │
+         └─────────────────────┘
+```
+
+---
+
+## 4. User Roles & Permissions
+
+### 4.1 Hospital Admin (Super Admin)
+**Capabilities:**
+- Manage all users (add/edit/deactivate doctors, nurses, patients)
+- Configure hospital settings (departments, services, pricing)
+- View all reports and analytics
+- Access all patient records
+- Manage billing and payments
+- System configuration and settings
+
+### 4.2 Doctor
+**Capabilities:**
+- View assigned/scheduled patients
+- Access patient medical records (read-only for history, write for current visit)
+- Record consultation notes, symptoms, vitals
+- **Use AI Diagnosis Assistant** for diagnostic suggestions
+- Create prescriptions
+- Order lab tests
+- Generate bills for consultations
+- View AI-generated patient summaries
+
+**Restrictions:**
+- Cannot manage other users
+- Cannot access hospital-wide settings
+- Cannot modify billing configuration
+
+### 4.3 Nurse
+**Capabilities:**
+- Register new patients (walk-ins)
+- Record patient vitals (BP, temperature, weight, height, etc.)
+- Manage patient queue (check-in, assign to doctors)
+- Update appointment status
+- View assigned patient information
+- Basic patient record access (demographics, current visit)
+
+**Restrictions:**
+- Cannot write diagnoses or prescriptions
+- Cannot access AI diagnosis tools
+- Limited access to historical medical records
+- Cannot manage billing
+
+### 4.4 Patient
+**Capabilities:**
+- **Use AI Chatbot** for symptom checking and appointment booking
+- Book appointments online
+- View own medical history and records
+- View prescriptions and download PDFs
+- View bills and payment history
+- Update personal information (contact, emergency contact)
+- Receive notifications about appointments
+
+**Restrictions:**
+- Can only access own data
+- Cannot access other patients' information
+- Cannot modify medical records
+- Cannot access administrative features
+
+---
+
+## 5. Functional Requirements
+
+### 5.1 User Management
+
+#### FR-UM-001: User Authentication
+- System shall support email/password-based authentication
+- System shall implement JWT-based session management
+- System shall enforce password complexity requirements (min 8 chars, uppercase, lowercase, number)
+- System shall support password reset functionality
+
+#### FR-UM-002: User Registration
+- Hospital Admin can create accounts for Doctors and Nurses
+- Nurses can register new Patients (walk-ins)
+- Patients can self-register online
+- Each user must have a unique email address
+- System shall auto-generate unique user IDs
+
+#### FR-UM-003: Role-Based Access Control
+- System shall enforce role-based permissions (4 levels)
+- System shall prevent unauthorized access to restricted resources
+- System shall log all access attempts for audit purposes
+
+#### FR-UM-004: User Profile Management
+- Users can update their profile information
+- Hospital Admin can deactivate/reactivate user accounts
+- System shall maintain user activity logs
+
+---
+
+### 5.2 Patient Management
+
+#### FR-PM-001: Patient Registration
+- System shall capture: full name, date of birth, gender, contact (phone, email), address, emergency contact
+- System shall auto-generate unique Patient ID
+- System shall support walk-in registration by nurses
+- System shall support self-registration by patients online
+
+#### FR-PM-002: Medical History
+- System shall record: allergies, chronic conditions, past surgeries, family history
+- System shall flag critical information (severe allergies, high-risk conditions)
+- System shall support medical history updates during consultations
+
+#### FR-PM-003: Patient Records Access
+- Patients can view their own complete medical history
+- Doctors can view full history of assigned patients
+- Nurses can view basic demographics and current visit info
+- Hospital Admin has full access to all records
+
+---
+
+### 5.3 Appointment Management
+
+#### FR-AP-001: Appointment Booking
+- Patients can book appointments online (with or without AI chatbot)
+- Nurses can book appointments for walk-in patients
+- System shall support department-based doctor assignment (ER, General)
+- No strict time slots required (queue-based system)
+
+#### FR-AP-002: Appointment Status
+- System shall track appointment states: Scheduled, In Progress, Completed, Cancelled
+- Nurses can check-in patients and update status
+- Doctors can mark appointments as completed
+- System shall maintain appointment history
+
+#### FR-AP-003: Queue Management
+- System shall maintain patient queue per doctor
+- Nurses can assign patients to doctor queues
+- System shall display estimated wait times
+- Doctors can view their current queue
+
+---
+
+### 5.4 Consultation Management
+
+#### FR-CM-001: Consultation Recording
+- Doctors shall record: chief complaint, symptoms, examination notes, diagnosis
+- System shall timestamp all consultation entries
+- System shall link consultations to appointments
+
+#### FR-CM-002: Vitals Recording
+- Nurses or Doctors can record: blood pressure, temperature, heart rate, respiratory rate, weight, height, oxygen saturation
+- System shall flag abnormal vitals automatically
+- System shall maintain vitals history with timestamps
+
+#### FR-CM-003: Prescription Management
+- Doctors can create prescriptions with: medicine name, dosage, frequency, duration, instructions
+- System shall generate prescription PDFs
+- Patients can download prescriptions from their portal
+- System shall maintain prescription history
+
+#### FR-CM-004: Lab Test Orders
+- Doctors can order lab tests during consultation
+- System shall track test status: Ordered, Sample Collected, In Progress, Completed
+- System shall support uploading test result PDFs
+- Patients can view test results when available
+
+---
+
+### 5.5 AI Features
+
+#### FR-AI-001: AI Diagnosis Assistant (For Doctors)
+**Inputs:**
+- Patient symptoms (text description)
+- Vital signs (BP, temp, heart rate, etc.)
+- Medical history (allergies, chronic conditions, past diagnoses)
+- Current medications
+
+**Outputs:**
+- List of possible differential diagnoses (ranked by likelihood)
+- Recommended diagnostic tests
+- Suggested treatment options
+- Risk factors and warnings
+
+**Workflow:**
+1. Doctor enters symptoms and vitals during consultation
+2. Doctor clicks "Get AI Suggestions"
+3. System sends data to Claude API
+4. AI returns structured diagnostic suggestions
+5. Doctor reviews, accepts, modifies, or rejects suggestions
+6. System logs AI suggestions vs. actual diagnosis (for learning)
+
+**Requirements:**
+- AI suggestions are advisory only (doctor makes final decision)
+- System shall clearly label content as "AI-Generated"
+- System shall store AI interaction logs
+- Response time: < 5 seconds
+
+#### FR-AI-002: AI Patient Chatbot
+**Capabilities:**
+- Conduct symptom interviews (ask follow-up questions)
+- Suggest appropriate department/specialist
+- Book appointments based on symptoms
+- Answer general health questions
+- Provide pre-consultation instructions
+
+**Workflow (Symptom Checker):**
+1. Patient describes symptoms in chat
+2. AI asks clarifying questions (onset, severity, location, etc.)
+3. AI suggests possible conditions (educational only, not diagnosis)
+4. AI recommends seeing a doctor
+5. Patient can book appointment directly from chat
+6. Chat history is attached to appointment for doctor review
+
+**Workflow (Appointment Booking):**
+1. Patient requests appointment
+2. AI asks for preferred date/time, reason for visit
+3. AI shows available doctors/departments
+4. Patient selects doctor
+5. AI confirms booking and provides appointment details
+
+**Requirements:**
+- Chatbot must include medical disclaimer
+- Chat history saved and accessible to doctors
+- Support real-time (WebSocket) and async messaging
+- Mobile-responsive chat interface
+- Response time: < 3 seconds
+
+#### FR-AI-003: Medical Records Intelligence
+**Features:**
+
+**a) Patient History Summarization**
+- Input: All past consultations, vitals, prescriptions, test results
+- Output: Concise 200-300 word summary highlighting:
+  - Key diagnoses and treatments
+  - Ongoing medications
+  - Recent vitals trends
+  - Critical alerts (allergies, chronic conditions)
+
+**b) Critical Insights Extraction**
+- Auto-detect and flag:
+  - Drug allergies
+  - Chronic conditions requiring monitoring
+  - Abnormal vital trends
+  - Missed follow-ups
+  - Potential drug interactions
+
+**c) Timeline Generation**
+- Visual timeline of patient's medical journey
+- Key events: diagnoses, surgeries, hospitalizations
+- Medication timeline
+
+**Workflow:**
+1. Doctor opens patient record
+2. AI-generated summary displayed at top
+3. Doctor can regenerate summary to include latest visit
+4. Critical insights highlighted in dedicated section
+
+**Requirements:**
+- Summary regenerated after each new consultation
+- Version history of summaries maintained
+- Summary generation time: < 10 seconds
+- Summaries must be accurate and clinically relevant
+
+---
+
+### 5.6 Billing & Payments
+
+#### FR-BP-001: Bill Generation
+- System shall auto-generate bills after consultation completion
+- Bill items: consultation fee, lab tests, procedures
+- Doctors can add custom charges during consultation
+- System shall calculate totals automatically
+
+#### FR-BP-002: Payment Processing
+- System shall support mock payment recording (no real gateway)
+- Payment methods: Cash, Card, UPI, Bank Transfer
+- System shall track payment status: Pending, Paid, Partially Paid
+- System shall generate payment receipts (PDF)
+
+#### FR-BP-003: Billing History
+- Patients can view all bills and payment history
+- Hospital Admin can view all billing reports
+- System shall support date-range filtering
+
+---
+
+### 5.7 Reporting & Analytics
+
+#### FR-RA-001: Hospital Admin Dashboard
+- Total patients registered
+- Appointments today/this week/this month
+- Revenue statistics
+- Most common diagnoses
+- Department-wise patient distribution
+- Doctor performance metrics (patients seen, avg consultation time)
+
+#### FR-RA-002: Doctor Dashboard
+- Today's appointments and queue
+- Recent patients
+- Pending lab results
+- AI usage statistics
+
+#### FR-RA-003: Export Capabilities
+- Export patient lists (CSV)
+- Export billing reports (PDF, Excel)
+- Export appointment schedules
+
+---
+
+## 6. Non-Functional Requirements
+
+### 6.1 Performance
+- **NFR-P-001**: Page load time < 2 seconds
+- **NFR-P-002**: API response time < 500ms (excluding AI calls)
+- **NFR-P-003**: AI response time < 10 seconds
+- **NFR-P-004**: System shall support 100 concurrent users
+- **NFR-P-005**: Database queries shall be optimized with proper indexing
+
+### 6.2 Security
+- **NFR-S-001**: All passwords must be hashed using bcrypt
+- **NFR-S-002**: All API endpoints must require authentication (except public registration)
+- **NFR-S-003**: Sensitive data (patient records) must be encrypted at rest
+- **NFR-S-004**: All communications must use HTTPS
+- **NFR-S-005**: JWT tokens must expire after 24 hours
+- **NFR-S-006**: System shall implement rate limiting on API endpoints
+- **NFR-S-007**: Audit logs must track all data access and modifications
+
+### 6.3 Reliability
+- **NFR-R-001**: System uptime: 99.5% (excluding planned maintenance)
+- **NFR-R-002**: Database backups every 24 hours
+- **NFR-R-003**: Graceful error handling with user-friendly messages
+- **NFR-R-004**: AI service failures must not block critical workflows
+
+### 6.4 Usability
+- **NFR-U-001**: Interface must be responsive (desktop, tablet, mobile)
+- **NFR-U-002**: Forms must include validation with clear error messages
+- **NFR-U-003**: Dashboard must load essential data within 2 seconds
+- **NFR-U-004**: AI chatbot must provide typing indicators for better UX
+
+### 6.5 Scalability
+- **NFR-SC-001**: Database schema must support horizontal scaling
+- **NFR-SC-002**: API must be stateless to support load balancing
+- **NFR-SC-003**: File storage must be cloud-based for scalability
+
+### 6.6 Maintainability
+- **NFR-M-001**: Code must follow PEP 8 style guide (Python)
+- **NFR-M-002**: All functions must have docstrings
+- **NFR-M-003**: Unit test coverage: minimum 70%
+- **NFR-M-004**: API must have auto-generated documentation (Swagger)
+
+---
+
+## 7. Data Models (High-Level)
+
+### 7.1 Core Entities
+
+```
+1. User (Abstract)
+   - Hospital Admin
+   - Doctor
+   - Nurse
+   - Patient
+
+2. Department
+   - ER, General Medicine, etc.
+
+3. Appointment
+   - Links Patient + Doctor
+   - Status tracking
+
+4. Consultation
+   - Medical notes
+   - Diagnosis
+   - Links to Vitals, Prescriptions, Tests
+
+5. Vitals
+   - BP, temperature, heart rate, etc.
+
+6. Prescription
+   - Medicines with dosage
+   - PDF generation
+
+7. LabTest
+   - Test orders and results
+
+8. Bill
+   - Line items
+   - Payment tracking
+
+9. AI Interaction Logs
+   - Chatbot conversations
+   - Diagnosis suggestions
+   - Medical summaries
+```
+
+### 7.2 AI-Specific Entities
+
+```
+10. ChatSession
+    - Patient <-> AI conversations
+    - Linked to appointments
+
+11. DiagnosisSuggestion
+    - AI suggestions per consultation
+    - Doctor feedback (accepted/rejected)
+
+12. PatientSummary
+    - AI-generated summaries
+    - Version history
+```
+
+---
+
+## 8. API Structure (High-Level)
+
+### 8.1 Authentication
+```
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/logout
+POST   /api/auth/refresh-token
+POST   /api/auth/reset-password
+```
+
+### 8.2 Users
+```
+GET    /api/users/me
+PUT    /api/users/me
+GET    /api/users/:id (Admin/Doctor access)
+POST   /api/users (Admin only - create doctor/nurse)
+PUT    /api/users/:id (Admin only)
+DELETE /api/users/:id (Admin only - soft delete)
+```
+
+### 8.3 Patients
+```
+POST   /api/patients (Register patient)
+GET    /api/patients (List - filtered by role)
+GET    /api/patients/:id
+PUT    /api/patients/:id
+GET    /api/patients/:id/medical-history
+PUT    /api/patients/:id/medical-history
+GET    /api/patients/:id/summary (AI-generated)
+```
+
+### 8.4 Appointments
+```
+POST   /api/appointments (Book appointment)
+GET    /api/appointments (List - filtered by role)
+GET    /api/appointments/:id
+PUT    /api/appointments/:id (Update status)
+DELETE /api/appointments/:id (Cancel)
+GET    /api/appointments/queue/:doctorId
+```
+
+### 8.5 Consultations
+```
+POST   /api/consultations (Create consultation record)
+GET    /api/consultations/:id
+PUT    /api/consultations/:id
+GET    /api/consultations/patient/:patientId
+POST   /api/consultations/:id/vitals
+POST   /api/consultations/:id/prescriptions
+POST   /api/consultations/:id/lab-tests
+```
+
+### 8.6 AI Services
+```
+POST   /api/ai/chatbot (Send message, get response)
+GET    /api/ai/chatbot/sessions/:patientId
+POST   /api/ai/diagnosis-assist (Get AI diagnostic suggestions)
+POST   /api/ai/summarize-patient/:patientId
+GET    /api/ai/interactions/:consultationId (View AI logs)
+```
+
+### 8.7 Billing
+```
+POST   /api/bills (Generate bill)
+GET    /api/bills/:id
+GET    /api/bills/patient/:patientId
+POST   /api/bills/:id/payment
+GET    /api/bills/:id/receipt (Download PDF)
+```
+
+### 8.8 Reports
+```
+GET    /api/reports/dashboard (Role-specific dashboard data)
+GET    /api/reports/patients (Patient statistics)
+GET    /api/reports/appointments (Appointment analytics)
+GET    /api/reports/revenue (Billing reports)
+```
+
+---
+
+## 9. Development Phases
+
+### Phase 1: Foundation (Week 1-2)
+- Set up development environment
+- Database schema design and implementation
+- User authentication and authorization
+- Basic CRUD for Users, Patients, Departments
+
+### Phase 2: Core Features (Week 3-4)
+- Appointment booking system
+- Patient registration (walk-in + online)
+- Consultation recording
+- Vitals and medical history management
+
+### Phase 3: AI Integration (Week 5-6)
+- AI Chatbot for patients
+- AI Diagnosis Assistant for doctors
+- Medical Records Intelligence
+- Integration testing for AI features
+
+### Phase 4: Billing & Documents (Week 7)
+- Bill generation and payment tracking
+- PDF generation (prescriptions, bills, reports)
+- File upload/download for lab results
+
+### Phase 5: Dashboards & Analytics (Week 8)
+- Role-specific dashboards
+- Reporting and analytics
+- Admin panel enhancements
+
+### Phase 6: Testing & Refinement (Week 9-10)
+- Comprehensive testing (unit, integration, E2E)
+- Performance optimization
+- Security audit
+- Bug fixes and UI/UX improvements
+
+### Phase 7: Deployment (Week 11-12)
+- Production environment setup
+- Deployment automation
+- Monitoring and logging setup
+- Documentation finalization
+
+---
+
+## 10. Python Libraries & Dependencies
+
+### Core Backend
+```python
+# Web Framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+psycopg2-binary==2.9.9
+asyncpg==0.29.0
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-decouple==3.8
+
+# AI Integration
+anthropic==0.18.1
+langchain==0.1.5
+langchain-anthropic==0.1.1
+
+# Data Validation
+pydantic==2.5.3
+pydantic-settings==2.1.0
+email-validator==2.1.0
+
+# File Handling
+python-multipart==0.0.6
+aiofiles==23.2.1
+Pillow==10.2.0
+
+# PDF Generation
+weasyprint==60.2
+reportlab==4.0.9
+
+# Caching
+redis==5.0.1
+hiredis==2.3.2
+
+# HTTP Client
+httpx==0.26.0
+aiohttp==3.9.1
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.23.3
+pytest-cov==4.1.0
+httpx==0.26.0 (for testing)
+
+# Code Quality
+black==23.12.1
+flake8==7.0.0
+mypy==1.8.0
+pylint==3.0.3
+
+# Utilities
+python-dateutil==2.8.2
+pytz==2023.3
+```
+
+### Frontend
+```json
+{
+  "dependencies": {
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3",
+    "@tanstack/react-query": "^5.17.19",
+    "zustand": "^4.4.7",
+    "axios": "^1.6.5",
+    "tailwindcss": "^3.4.1",
+    "shadcn-ui": "latest",
+    "lucide-react": "^0.309.0",
+    "date-fns": "^3.2.0",
+    "react-hook-form": "^7.49.3",
+    "zod": "^3.22.4"
+  }
+}
+```
+
+---
+
+## 11. Database Considerations
+
+### PostgreSQL Specific Features to Use:
+- **JSONB columns** for flexible AI interaction logs
+- **Full-text search** for patient search by name/ID
+- **Triggers** for auto-timestamping
+- **Views** for complex reporting queries
+- **Row-level security** for multi-user data isolation
+- **Indexes** on foreign keys and frequently queried columns
+- **Partitioning** for large tables (future scaling)
+
+---
+
+## 12. Security Considerations
+
+1. **HIPAA-Like Compliance** (even if not in US):
+   - Encrypted patient data
+   - Audit logs for all access
+   - Role-based access control
+   - Secure data transmission (HTTPS)
+
+2. **API Security**:
+   - Rate limiting (100 requests/minute per user)
+   - Input validation (Pydantic models)
+   - SQL injection prevention (ORM)
+   - XSS protection (Content Security Policy)
+
+3. **AI Security**:
+   - Sanitize all inputs to AI
+   - Never expose API keys in frontend
+   - Implement prompt injection detection
+   - Log all AI interactions
+
+---
+
+## 13. Deployment Architecture
+
+```
+┌─────────────────────────────────────────┐
+│         Cloudflare (DNS + CDN)          │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│     Load Balancer (NGINX/Caddy)         │
+└────────────────┬────────────────────────┘
+                 │
+        ┌────────┴────────┐
+        ▼                 ▼
+┌──────────────┐   ┌──────────────┐
+│  Frontend    │   │   Backend    │
+│  (Next.js)   │   │  (FastAPI)   │
+│  Container   │   │  Containers  │
+└──────────────┘   └──────┬───────┘
+                          │
+                 ┌────────┴────────┐
+                 ▼                 ▼
+        ┌─────────────┐   ┌──────────────┐
+        │ PostgreSQL  │   │    Redis     │
+        │  Database   │   │    Cache     │
+        └─────────────┘   └──────────────┘
+```
+
+---
+
+## 14. Success Metrics
+
+1. **Performance**: 95% of API calls < 500ms
+2. **AI Accuracy**: 80%+ useful diagnosis suggestions (doctor feedback)
+3. **User Adoption**: 70%+ patients use AI chatbot for booking
+4. **System Reliability**: 99.5% uptime
+5. **User Satisfaction**: NPS score > 50
+
+---
+
+## 15. Future Enhancements (Post-MVP)
+
+- Mobile apps (React Native)
+- Telemedicine (video consultations)
+- Integration with lab equipment (auto-import results)
+- Pharmacy inventory management
+- Multi-hospital support (convert to true SaaS)
+- Advanced analytics with machine learning
+- Voice-to-text for doctor notes
+- OCR for scanning paper records
+
+---
+
+**This SRS provides the complete blueprint for building your AI-powered HRM system with Python as the primary technology stack.**
+
+**Ready to proceed with detailed database models?** 🚀
