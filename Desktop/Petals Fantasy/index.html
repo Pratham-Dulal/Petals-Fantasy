@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petals Fantasy | Bouquet Wrapped With Love</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.jpg" alt="Petals Fantasy Logo">
+                    Petals Fantasy
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+
+            <div class="nav-icons">
+                <div class="cart-icon" onclick="window.location.href='shop.html'">
+                    <!-- Link to shop for now or cart modal later -->
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <div class="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Timeless floral art</h1>
+            <p>Handcrafted paper & plastic bouquets that last forever.<br>beauty that never fades.</p>
+            <div class="hero-btns">
+                <a href="shop.html" class="btn">View Collection</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="section categories">
+        <div class="container">
+            <h2 class="section-title">Curated Collections</h2>
+            <div class="category-grid">
+                <div class="category-card" onclick="window.location.href='shop.html'">
+                    <div class="cat-icon"><i class="fas fa-heart"></i></div>
+                    <h3>Everlasting Romance</h3>
+                </div>
+                <div class="category-card" onclick="window.location.href='shop.html'">
+                    <div class="cat-icon"><i class="fas fa-birthday-cake"></i></div>
+                    <h3>Birthday Specials</h3>
+                </div>
+                <div class="category-card" onclick="window.location.href='shop.html'">
+                    <div class="cat-icon"><i class="fas fa-infinity"></i></div>
+                    <h3>Infinity Collection</h3>
+                </div>
+                <div class="category-card" onclick="window.location.href='shop.html'">
+                    <div class="cat-icon"><i class="fas fa-gem"></i></div>
+                    <h3>Premium Gifts</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals (Horizontal Scroll) -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Fresh from the Studio</h2>
+            <div class="new-arrivals-scroll">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="images/Classic Tulip Duo bouquet.jpg.jpeg" alt="Classic Tulip">
+                    </div>
+                    <div class="product-info">
+                        <h3>Classic Tulip Duo</h3>
+                        <p class="price">Rs. 1,800</p>
+                    </div>
+                </div>
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="images/Royal Red Ribbon Bouquet.jpg.jpeg" alt="Royal Red">
+                    </div>
+                    <div class="product-info">
+                        <h3>Royal Red Ribbon</h3>
+                        <p class="price">Rs. 2,500</p>
+                    </div>
+                </div>
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="images/Satin Tulip Bouquet (Pink & Black).jpg.jpeg" alt="Satin Tulip">
+                    </div>
+                    <div class="product-info">
+                        <h3>Satin Tulip Luxe</h3>
+                        <p class="price">Rs. 3,200</p>
+                    </div>
+                </div>
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="images/Sun kissed sunflower bouquet.jpg.jpeg" alt="Sunflower">
+                    </div>
+                    <div class="product-info">
+                        <h3>Sun Kissed Sunflower</h3>
+                        <p class="price">Rs. 2,100</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Love Notes (Letter Box) -->
+    <section class="section" style="background: var(--color-bg-pink);">
+        <div class="container">
+            <h2 class="section-title">Love Notes</h2>
+            <div class="testimonial-grid">
+                <!-- 1 -->
+                <div class="letter-box">
+                    <p>"Delivery was exactly on time for my anniversary. The custom wrapping was a lovely touch."</p>
+                    <div style="margin-top: 20px; font-weight: bold;">Sita Sharma</div>
+                    <div style="font-size: 0.8rem; text-transform: uppercase; color: #888;">Kathmandu</div>
+                </div>
+                <!-- 2 -->
+                <div class="letter-box">
+                    <p>"I scheduled a birthday delivery two weeks in advance, and it arrived perfectly on time."</p>
+                    <div style="margin-top: 20px; font-weight: bold;">Ramesh K.</div>
+                    <div style="font-size: 0.8rem; text-transform: uppercase; color: #888;">Lalitpur</div>
+                </div>
+                <!-- 3 -->
+                <div class="letter-box">
+                    <p>"The bouquet feels so real and premium. I love that it lasts forever. Highly recommended!"</p>
+                    <div style="margin-top: 20px; font-weight: bold;">Anjali G.</div>
+                    <div style="font-size: 0.8rem; text-transform: uppercase; color: #888;">Bhaktapur</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Stories (New Section) -->
+    <section class="section" style="padding: 0;">
+        <div class="story-grid">
+            <div class="story-img"
+                style="background: white; display: flex; align-items: center; justify-content: center;">
+                <img src="images/logo.jpg" alt="Our Story" style="object-fit: contain; width: 60%; height: auto;">
+            </div>
+            <div class="story-content">
+                <h3>Our Story</h3>
+                <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px;">
+                    We started Petals Fantasy with a simple belief: beauty should not be fleeting.
+                    In a world of fast moments, we craft everlasting flowers that hold onto memories forever.
+                </p>
+                <a href="about.html" class="btn">Read More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Sellers -->
+    <section class="section best-sellers">
+        <div class="container">
+            <h2 class="section-title">Best Sellers</h2>
+            <div class="product-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="images/Velvet Red Rose Medallion bouquet.jpg.jpeg" alt="Red Rose Love">
+                    </div>
+                    <div class="product-info">
+                        <h3>Red Rose Love Bouquet</h3>
+                        <p class="price">Rs. 1,500</p>
+                        <button class="btn-sm"
+                            onclick="addToCart({id: 1, name: 'Red Rose Love Bouquet', price: 1500})">Add to
+                            Cart</button>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="images/Satin Tulip Bouquet (Pink & Black).jpg.jpeg" alt="Pastel Dream">
+                    </div>
+                    <div class="product-info">
+                        <h3>Pastel Dream Bouquet</h3>
+                        <p class="price">Rs. 2,200</p>
+                        <button class="btn-sm"
+                            onclick="addToCart({id: 2, name: 'Pastel Dream Bouquet', price: 2200})">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="images/Classic Tulip Duo bouquet.jpg.jpeg" alt="Luxury White">
+                    </div>
+                    <div class="product-info">
+                        <h3>Luxury White Roses</h3>
+                        <p class="price">Rs. 3,500</p>
+                        <button class="btn-sm" onclick="addToCart({id: 3, name: 'Luxury White Roses', price: 3500})">Add
+                            to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="images/Sun kissed sunflower bouquet.jpg.jpeg" alt="Sunflower Joy">
+                    </div>
+                    <div class="product-info">
+                        <h3>Sunflower Joy</h3>
+                        <p class="price">Rs. 1,800</p>
+                        <button class="btn-sm" onclick="addToCart({id: 4, name: 'Sunflower Joy', price: 1800})">Add to
+                            Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="section features">
+        <div class="container feature-grid">
+            <div class="feature-item">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>100% Handcrafted</h3>
+                <p>Meticulously crafted by artisans.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-infinity"></i>
+                <h3>Lasts Forever</h3>
+                <p>Beauty that never fades or wilts.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-globe-americas"></i>
+                <h3>Eco-Friendly</h3>
+                <p>Sustainable paper & reusable materials.</p>
+            </div>
+            <div class="feature-item">
+                <i class="fas fa-star"></i>
+                <h3>Premium Quality</h3>
+                <p>Luxury materials for a real look.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/9779800000000" target="_blank" class="floating-whatsapp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Petals Fantasy</h3>
+                    <p>Bouquet Wrapped With Love. We create moments of happiness with our premium floral arrangements.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/petals_fantasyyyy/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@petals_fantasyyyy"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <a href="shop.html">Shop Flowers</a>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
+                    <p><i class="fas fa-phone"></i> +977 9800000000</p>
+                    <p><i class="fas fa-envelope"></i> hello@petalsfantasy.com</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 Petals Fantasy. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

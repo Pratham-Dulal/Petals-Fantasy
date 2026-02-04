@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Petals Fantasy</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.jpg" alt="Petals Fantasy Logo">
+                    Petals Fantasy
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <div class="nav-icons">
+                <div class="cart-icon" onclick="window.location.href='shop.html'">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <div class="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-header" style="background: var(--color-pink); padding: 50px 0; text-align: center;">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you</p>
+        </div>
+    </div>
+
+    <section class="section">
+        <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px;">
+            <div class="contact-info">
+                <h2 style="font-family: var(--font-heading); margin-bottom: 20px;">Get in Touch</h2>
+                <p style="margin-bottom: 10px;"><i class="fas fa-map-marker-alt"
+                        style="color: var(--color-green); margin-right: 10px;"></i> Kathmandu, Nepal</p>
+                <p style="margin-bottom: 10px;"><i class="fas fa-phone"
+                        style="color: var(--color-green); margin-right: 10px;"></i> +977 9800000000</p>
+                <p style="margin-bottom: 10px;"><i class="fas fa-envelope"
+                        style="color: var(--color-green); margin-right: 10px;"></i> hello@petalsfantasy.com</p>
+
+                <h3 style="margin-top: 30px; margin-bottom: 15px;">Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/petals_fantasyyyy/"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@petals_fantasyyyy"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+
+            <div class="contact-form"
+                style="background: white; padding: 30px; box-shadow: var(--shadow); border-radius: 10px;">
+                <h3 style="margin-bottom: 20px;">Send us a message</h3>
+                <form>
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" placeholder="Your Name"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="email" placeholder="Your Email"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <textarea placeholder="Your Message" rows="5"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"></textarea>
+                    </div>
+                    <button type="button" class="btn" onclick="alert('Message Sent!')">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Petals Fantasy</h3>
+                    <p>Bouquet Wrapped With Love. We create moments of happiness with our premium floral arrangements.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://www.instagram.com/petals_fantasyyyy/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@petals_fantasyyyy"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <a href="shop.html">Shop Flowers</a>
+                    <a href="about.html">About Us</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Kathmandu, Nepal</p>
+                    <p><i class="fas fa-phone"></i> +977 9800000000</p>
+                    <p><i class="fas fa-envelope"></i> hello@petalsfantasy.com</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2024 Petals Fantasy. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="js/script.js"></script>
+</body>
+
+</html>
